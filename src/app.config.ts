@@ -1,6 +1,7 @@
-import { EnvVarsConfiguration } from './adapters/outbounds/env-vars-configuration/env-vars-configuration';
-import { Configuration } from './core/ports/configuration';
+import { Provider } from '@nestjs/common';
+import { EnvConfiguration } from './adapters/outbounds/env-configuration/env-configuration';
+import { Configuration } from './core/ports/outbounds/configuration';
 
-export const AppConfig = {
-  Configuration: { provide: Configuration, useClass: EnvVarsConfiguration },
+export const AppConfig: Record<string, Provider> = {
+    Configuration: { provide: Configuration, useClass: EnvConfiguration },
 };

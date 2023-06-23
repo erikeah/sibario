@@ -1,26 +1,42 @@
 import { Module } from '@nestjs/common';
-import { Configuration, ConfigurationEnum } from './core/ports/configuration';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule } from '@nestjs/config';
+import {
+    Configuration,
+    ConfigurationEnum,
+} from './core/ports/outbounds/configuration';
 import { AppConfig } from './app.config';
 import { BookingModule } from './core/services/booking';
-import { PlaceController } from './adapters/inbounds/rest/place/place.controller';
+import { PlacesController } from './adapters/inbounds/rest/places/places.controller';
+import { PlaceModule } from './core/services/place/place.module';
+import { EnvConfiguration } from './adapters/outbounds/env-configuration/env-configuration';
 
 @Module({
-  imports: [
-    TypeOrmModule.forRootAsync({
-      extraProviders: [AppConfig.Configuration],
-      inject: [Configuration],
-      useFactory: (configuration: Configuration) => ({
-        type: 'mysql',
-        host: configuration.get(ConfigurationEnum.MYSQL_HOST),
-        username: configuration.get(ConfigurationEnum.MYSQL_USERNAME),
-        password: configuration.get(ConfigurationEnum.MYSQL_PASSWORD),
-        database: configuration.get(ConfigurationEnum.MYSQL_DATABASE),
-        synchronize: true,
-      }),
-    }),
-    BookingModule,
-  ],
-  controllers: [PlaceController],
+    imports: [
+        ConfigModule.forRoot({ isGlobal: true }),
+        TypeOrmModule.forRootAsync({
+            extraProviders: [AppConfig.Configuration],
+            inject: [Configuration],
+            useFactory: (configuration: Configuration) => ({
+                type: 'mysql',
+                host: configuration.getOrThrow(ConfigurationEnum.MYSQL_HOST),
+                username: configuration.getOrThrow(
+                    ConfigurationEnum.MYSQL_USERNAME,
+                ),
+                password: configuration.getOrThrow(
+                    ConfigurationEnum.MYSQL_PASSWORD,
+                ),
+                database: configuration.getOrThrow(
+                    ConfigurationEnum.MYSQL_DATABASE,
+                ),
+                synchronize: true,
+                autoLoadEntities: true,
+            }),
+        }),
+        BookingModule,
+        PlaceModule,
+    ],
+    controllers: [PlacesController],
+    providers: [EnvConfiguration],
 })
 export class AppModule {}

@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { PlacesController } from './places.controller';
 import { PlaceService } from 'src/core/services/place';
 import { placeService } from 'test/__mocks__/place-service';
+import { PlacesController } from './places.controller';
 
 describe('PlacesController', () => {
     let controller: PlacesController;

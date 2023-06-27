@@ -10,7 +10,7 @@ export class PlaceService implements GetPlaces {
     ) {}
 
     async get(): Promise<Place[]> {
-        let places = await this.placeRepository.list();
+        const places = await this.placeRepository.list();
         if (!places || !Array.isArray(places)) {
             throw new Error('place repository do not response');
         }

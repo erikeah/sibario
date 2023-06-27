@@ -1,12 +1,10 @@
-import {
-    Column, Entity, PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class PlaceEntity {
     @PrimaryGeneratedColumn()
-        id: string;
+    id: string;
 
     @Column()
-        name: string;
+    name: string;
 }

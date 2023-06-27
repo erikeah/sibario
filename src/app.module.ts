@@ -9,7 +9,6 @@ import { AppConfig } from './app.config';
 import { BookingModule } from './core/services/booking';
 import { PlacesController } from './adapters/inbounds/rest/places/places.controller';
 import { PlaceModule } from './core/services/place/place.module';
-import { EnvConfiguration } from './adapters/outbounds/env-configuration/env-configuration';
 
 @Module({
     imports: [
@@ -37,6 +36,6 @@ import { EnvConfiguration } from './adapters/outbounds/env-configuration/env-con
         PlaceModule,
     ],
     controllers: [PlacesController],
-    providers: [EnvConfiguration],
+    providers: [AppConfig.Configuration],
 })
 export class AppModule {}

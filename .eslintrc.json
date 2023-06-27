@@ -25,6 +25,7 @@
     "class-methods-use-this": "off",
     "grouped-accessor-pairs": "off",
     "import/prefer-default-export": "off",
+    "no-plusplus": "off",
     "indent": "off"
   }
 }

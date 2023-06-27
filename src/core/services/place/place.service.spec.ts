@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { PlaceService } from './place.service';
 import { PlaceRepository } from 'src/core/ports/outbounds/place-repository';
 import { placeRepository } from 'test/__mocks__/place-repository';
+import { PlaceService } from './place.service';
 
 describe('PlaceService', () => {
     let service: PlaceService;
@@ -26,9 +26,13 @@ describe('PlaceService', () => {
             expect(service.get).toBeDefined();
         });
         it('should throw if place repository list do not response correctly', () => {
-            jest.spyOn(placeRepository, 'list').mockResolvedValueOnce(undefined);
-            expect(() => service.get()).rejects.toThrowError('place repository do not response');
-        })
+            jest.spyOn(placeRepository, 'list').mockResolvedValueOnce(
+                undefined,
+            );
+            expect(() => service.get()).rejects.toThrowError(
+                'place repository do not response',
+            );
+        });
         it('should return an array', async () => {
             const getResponse = await service.get();
             jest.spyOn(placeRepository, 'list').mockResolvedValueOnce([

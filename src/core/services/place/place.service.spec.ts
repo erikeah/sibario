@@ -25,12 +25,12 @@ describe('PlaceService', () => {
         it('should be defined', () => {
             expect(service.get).toBeDefined();
         });
-        it('should throw if place repository list do not response correctly', () => {
+        it('should throw if place repository list did not response correctly', () => {
             jest.spyOn(placeRepository, 'list').mockResolvedValueOnce(
                 undefined,
             );
             expect(() => service.get()).rejects.toThrowError(
-                'place repository do not response',
+                'place repository did not response',
             );
         });
         it('should return an array', async () => {

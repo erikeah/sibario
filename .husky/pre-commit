@@ -1,0 +1,11 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+get_staged_files() {
+    git diff --diff-filter=d --cached --name-only | grep "((?:(?:src)|(?:test)|(?:libs)|(?:apps)).*\.ts)"
+}
+
+echo "## Running test"
+pnpm run test
+echo "## Running eslint"
+pnpm exec eslint $(get_staged_files)

@@ -1,13 +1,13 @@
 import { Controller, Get } from '@nestjs/common';
-import { Booking } from 'src/core/models';
-import { BookingService } from 'src/core/services/booking';
+import { Place } from 'src/core/models';
+import { PlaceService } from 'src/core/services/place';
 
 @Controller('places')
 export class PlacesController {
-    constructor(private bookingService: BookingService) {}
+    constructor(private placeService: PlaceService) {}
 
     @Get()
-    get(): Promise<Booking> {
-        return this.bookingService.get({ id: 'hello' });
+    get(): Promise<Place[]> {
+        return this.placeService.get();
     }
 }

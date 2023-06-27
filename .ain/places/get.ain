@@ -1,0 +1,11 @@
+[Host]
+http://localhost:3000/places
+
+[Headers]
+Content-Type: application/json
+
+[Backend]
+curl
+
+[BackendOptions]
+-sS

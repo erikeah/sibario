@@ -4,6 +4,6 @@ export const placeRepository: PlaceRepository = {
     update: jest.fn(),
     find: jest.fn(),
     list: jest.fn().mockResolvedValue([]),
-    create: jest.fn(),
+    create: jest.fn().mockResolvedValue({}),
     delete: jest.fn(),
 };

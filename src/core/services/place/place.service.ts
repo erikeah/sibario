@@ -14,6 +14,7 @@ export class PlaceService implements GetPlaces, CreatePlace {
     async create(payload: CreatePlacePayload): Promise<Place> {
         if (!payload.name) throw new HandledError('missing arguments', HandledErrorEnum.BadRequest);
         const place = await this.placeRepository.create(payload);
+        if (!place) throw new HandledError('place repository did not response', HandledErrorEnum.UnknowRepositoryError);
         return new Place(place.id, place.name);
     }
 

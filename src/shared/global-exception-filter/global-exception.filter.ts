@@ -24,6 +24,11 @@ export class GlobalExceptionFilter implements ExceptionFilter {
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .json({ message: exception.message });
                 break;
+            case HandledErrorEnum.BadRequest:
+                response
+                    .status(HttpStatus.BAD_REQUEST)
+                    .json({ message: exception.message });
+                break;
             default:
                 this.unhandled(exception, response);
         }

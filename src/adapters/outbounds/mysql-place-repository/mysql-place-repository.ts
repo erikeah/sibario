@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Place } from 'src/core/models';
 import { PlaceRepository } from 'src/core/ports/outbounds/place-repository';
 import { Repository } from 'typeorm';
+import { HandledError, HandledErrorEnum } from 'src/shared/global-exception-filter';
 import { PlaceEntity } from './place.entity';
 
 @Injectable()
@@ -14,5 +15,11 @@ export class MysqlPlaceRepository implements Partial<PlaceRepository> {
 
     list(): Promise<Place[]> {
         return this.repository.find();
+    }
+
+    async create(payload: PlaceEntity): Promise<PlaceEntity> {
+        const place = await this.repository.save(payload);
+        if (!place) throw new HandledError('unable to create new place', HandledErrorEnum.UnknowRepositoryError);
+        return place;
     }
 }

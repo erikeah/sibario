@@ -1,14 +1,21 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Place } from 'src/core/models';
-import { GetPlaces } from 'src/core/ports/inbounds/place';
+import { CreatePlace, GetPlaces } from 'src/core/ports/inbounds/place';
+import { CreatePlacePayload } from 'src/core/ports/inbounds/place/interfaces';
 import { PlaceRepository } from 'src/core/ports/outbounds/place-repository';
 import { HandledError, HandledErrorEnum } from 'src/shared/global-exception-filter';
 
 @Injectable()
-export class PlaceService implements GetPlaces {
+export class PlaceService implements GetPlaces, CreatePlace {
     constructor(
         @Inject(PlaceRepository) private placeRepository: PlaceRepository,
     ) {}
+
+    async create(payload: CreatePlacePayload): Promise<Place> {
+        if (!payload.name) throw new HandledError('missing arguments', HandledErrorEnum.BadRequest);
+        const place = await this.placeRepository.create(payload);
+        return new Place(place.id, place.name);
+    }
 
     async get(): Promise<Place[]> {
         const places = await this.placeRepository.list();

@@ -1,6 +1,12 @@
 [Host]
 http://localhost:3000/places
 
+[Method]
+POST
+
+[Body]
+{ "name": "Bar San Timoteo" }
+
 [Headers]
 Content-Type: application/json
 

@@ -5,6 +5,7 @@ import {
 import { Response } from 'express';
 import { HandledError } from './handled-error/handled-error';
 import { HandledErrorEnum } from './handled-error.enum';
+import { RestError } from './rest-error/rest-error';
 
 @Catch()
 export class GlobalExceptionFilter implements ExceptionFilter {
@@ -35,9 +36,17 @@ export class GlobalExceptionFilter implements ExceptionFilter {
     }
 
     private unhandled(exception: unknown, response: Response): void {
-        const httpStatus = exception instanceof HttpException
-            ? exception.getStatus()
-            : HttpStatus.INTERNAL_SERVER_ERROR;
-        response.status(httpStatus).json({});
+        if (exception instanceof HttpException) {
+            const httpStatus = exception.getStatus();
+            exception.initMessage();
+            const { message } = exception.getResponse() as { message: string[] | string };
+            response
+                .status(httpStatus)
+                .json(new RestError(httpStatus, message));
+        } else {
+            response
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .json(new RestError(HttpStatus.INTERNAL_SERVER_ERROR));
+        }
     }
 }

@@ -6,8 +6,8 @@ services:
       target: dev
     restart: always
     volumes:
-      - ./:/srv/
-      - /srv/node_modules
+      - ./src:/srv/src
+      - ./test:/srv/test
     ports:
       - 3000:3000
     env_file:

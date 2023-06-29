@@ -1,20 +1,28 @@
-FROM node:18.13.0-alpine as build
+FROM node:18.16.0-alpine as base
 WORKDIR /srv
-RUN npm install -g pnpm
+RUN apk add jq 
 COPY package.json pnpm-lock.yaml ./
-RUN pnpm i --frozen-lockfile
-COPY ./src ./src
+RUN npm i pnpm@$(jq '.engines.pnpm' package.json  -r) --global
+RUN apk del -r jq
+RUN pnpm fetch
+COPY tsconfig.build.json tsconfig.json src/ ./
 
-FROM build as dev
+FROM base as build
 WORKDIR /srv
+RUN pnpm i --offline -r
+RUN pnpm run build
+
+FROM base as dev
+WORKDIR /srv
+RUN pnpm i --offline -r
+COPY ./src ./src
 EXPOSE ${PORT:-3000}
 CMD [ "pnpm", "run", "start:dev"]
 
-FROM node:18.13.0-alpine as prod
+FROM base as prod
 WORKDIR /srv
-RUN npm install -g pnpm
 COPY --from=build /srv/dist .
-COPY --from=build package.json pnpm-lock.yaml
-RUN pnpm i --frozen-lockfile -P
+RUN pnpm i --offline -r --prod --ignore-scripts
+RUN pnpm prune -P
 EXPOSE ${PORT:-3000}
 CMD [ "node", "main.js" ]

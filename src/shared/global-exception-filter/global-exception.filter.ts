@@ -23,12 +23,17 @@ export class GlobalExceptionFilter implements ExceptionFilter {
             case HandledErrorEnum.UnknowRepositoryError:
                 response
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .json({ message: exception.message });
+                    .json(new RestError(HttpStatus.INTERNAL_SERVER_ERROR, exception.message));
                 break;
             case HandledErrorEnum.BadRequest:
                 response
                     .status(HttpStatus.BAD_REQUEST)
-                    .json({ message: exception.message });
+                    .json(new RestError(HttpStatus.BAD_REQUEST, exception.message));
+                break;
+            case HandledErrorEnum.ImposibleCase:
+                response
+                    .status(HttpStatus.NOT_ACCEPTABLE)
+                    .json(new RestError(HttpStatus.NOT_ACCEPTABLE, exception.message));
                 break;
             default:
                 this.unhandled(exception, response);

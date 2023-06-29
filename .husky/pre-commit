@@ -2,7 +2,7 @@
 . "$(dirname -- "$0")/_/husky.sh"
 
 get_staged_files() {
-    git diff --diff-filter=d --cached --name-only | grep "((?:(?:src)|(?:test)|(?:libs)|(?:apps)).*\.ts)"
+    git diff --staged --name-only | grep -P "((?:(?:src)|(?:test)|(?:libs)|(?:apps)).*\.ts)"
 }
 
 echo "## Running test"

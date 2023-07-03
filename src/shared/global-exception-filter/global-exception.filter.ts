@@ -30,7 +30,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
                     .status(HttpStatus.BAD_REQUEST)
                     .json(new RestError(HttpStatus.BAD_REQUEST, exception.message));
                 break;
-            case HandledErrorEnum.ImposibleCase:
+            case HandledErrorEnum.InvalidData:
                 response
                     .status(HttpStatus.NOT_ACCEPTABLE)
                     .json(new RestError(HttpStatus.NOT_ACCEPTABLE, exception.message));

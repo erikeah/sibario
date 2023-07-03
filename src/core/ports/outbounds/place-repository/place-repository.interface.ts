@@ -1,9 +1,9 @@
 import { Place } from 'src/core/models';
-import { CreatePlacePayloadPort } from './interface';
+import { CreatePlaceOutboundPayload } from './interface';
 
 export const PlaceRepository = 'PlaceRepository';
 export interface PlaceRepository {
-    create(payload: CreatePlacePayloadPort): Promise<Place>;
+    create(payload: CreatePlaceOutboundPayload): Promise<Place>;
     find(id: string): Promise<Place[]>;
     list(filter?: Partial<Place>): Promise<Place[]>;
     update(id: string, request: Place): Promise<Place>;

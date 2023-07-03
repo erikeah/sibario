@@ -3,10 +3,8 @@ export class Place {
 
     name: string;
 
-    constructor(id: string, name: string) {
-        Object.assign(this, {
-            id,
-            name,
-        });
+    constructor(object: Partial<Place>) {
+        this.id = object.id;
+        this.name = object.name;
     }
 }

@@ -1,10 +1,10 @@
 import { Place } from 'src/core/models';
-import { CreatePlacePayload } from './interfaces';
+import { CreatePlaceInboundPayload } from './interfaces';
 
 export interface GetPlaces {
     get(): Promise<Place[]>;
 }
 
 export interface CreatePlace {
-    create(place: CreatePlacePayload): Promise<Place>;
+    create(place: CreatePlaceInboundPayload): Promise<Place>;
 }

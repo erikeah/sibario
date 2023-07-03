@@ -1,1 +1,1 @@
-export * from './create-playload.interface';
+export * from './create-place-payload.interface';

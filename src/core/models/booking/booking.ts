@@ -1,7 +1,10 @@
-import { Dayjs } from 'dayjs';
-import { BookingInput, BookingStatus } from './interface';
-import { InvalidBookingDate } from './booking-error.contansts';
+import dayjs from 'dayjs';
+import {
+    HandledError,
+    HandledErrorEnum,
+} from 'src/shared/global-exception-filter';
 import { Place } from '../place/place';
+import { BookingStatusEnum } from './booking-status.enum';
 
 export class Booking {
     id: string;
@@ -12,34 +15,59 @@ export class Booking {
 
     place: Place;
 
-    private dateProp: string;
+    private _date: string;
 
-    private statusProp: BookingStatus;
+    private _status: BookingStatusEnum;
 
-    constructor(payload: BookingInput) {
+    constructor(payload: Partial<Booking>) {
         this.id = payload.id;
         this.seats = payload.seats;
         this.client = payload.client;
+        this.place = payload.place;
+        this.date = payload.date;
+        this.status = payload.status;
     }
 
     public get date(): string {
-        return new Dayjs(this.dateProp).toISOString();
+        return dayjs(this._date).toISOString();
     }
 
-    public get status(): BookingStatus {
-        if (this.statusProp === BookingStatus.CANCELLED) return this.statusProp;
-        if (new Dayjs().unix() < new Dayjs(this.date).unix())
-            return BookingStatus.TERMINATED;
-        return BookingStatus.ON_TIME;
+    public get status(): BookingStatusEnum {
+        if (
+            this._status === BookingStatusEnum.CANCELLED
+            || this._status === BookingStatusEnum.RESERVED
+            || this._status === BookingStatusEnum.TERMINATED
+        ) {
+            return this._status;
+        }
+        if (dayjs().unix() < dayjs(this.date).unix()) return BookingStatusEnum.TERMINATED;
+        return BookingStatusEnum.RESERVED;
     }
 
     public set date(value: string) {
-        if (new Dayjs(value).isValid())
-            this.dateProp = new Dayjs(value).toISOString();
-        else throw new Error(InvalidBookingDate);
+        if (dayjs(value).isValid()) {
+            this._date = dayjs(value).toISOString();
+        } else {
+            throw new HandledError(
+                'Invalid booking date',
+                HandledErrorEnum.InvalidData,
+            );
+        }
     }
 
-    public set status(value: BookingStatus) {
-        this.statusProp = value;
+    public set status(value: BookingStatusEnum) {
+        if (!value) return;
+        if (
+            value === BookingStatusEnum.CANCELLED
+            || value === BookingStatusEnum.RESERVED
+            || value === BookingStatusEnum.TERMINATED
+        ) {
+            this._status = value;
+        } else {
+            throw new HandledError(
+                'Invalid booking status',
+                HandledErrorEnum.InvalidData,
+            );
+        }
     }
 }

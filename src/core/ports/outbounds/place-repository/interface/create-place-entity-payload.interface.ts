@@ -1,3 +1,3 @@
-export interface CreatePlaceEntityPayload {
+export interface CreatePlaceOutboundPayload {
     name: string
 }

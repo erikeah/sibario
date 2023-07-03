@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PlaceRepository } from 'src/core/ports/outbounds/place-repository';
 import { placeRepository } from 'test/__mocks__/place-repository';
-import { CreatePlacePayload } from 'src/core/ports/inbounds/place/interfaces';
+import { CreatePlaceInboundPayload } from 'src/core/ports/inbounds/place/interfaces';
 import { PlaceService } from './place.service';
 
 describe('PlaceService', () => {
@@ -47,7 +47,7 @@ describe('PlaceService', () => {
             expect(service.create).toBeDefined();
         });
         it('should throw if name at the payload is not provided', () => {
-            expect(() => service.create({} as CreatePlacePayload)).rejects.toThrowError('missing arguments');
+            expect(() => service.create({} as CreatePlaceInboundPayload)).rejects.toThrowError('missing arguments');
         });
         it('should throw if place repository list did not response correctly', () => {
             jest.spyOn(placeRepository, 'create').mockResolvedValueOnce(

@@ -1,7 +1,7 @@
 import { Place } from './place';
 
 describe('Place', () => {
-    const place = new Place('', '');
+    const place = new Place({ id: '', name: '' });
     it('should be defined', () => {
         expect(place).toBeDefined();
     });

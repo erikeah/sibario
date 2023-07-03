@@ -19,13 +19,15 @@
   "rules": {
     "@typescript-eslint/adjacent-overload-signatures": "off",
     "@typescript-eslint/explicit-function-return-type": "error",
+    "@typescript-eslint/indent": ["error", 4],
     "@typescript-eslint/member-ordering": "error",
     "@typescript-eslint/no-redeclare": "off",
-    "@typescript-eslint/indent": ["error", 4],
     "class-methods-use-this": "off",
     "grouped-accessor-pairs": "off",
     "import/prefer-default-export": "off",
+    "indent": "off",
     "no-plusplus": "off",
-    "indent": "off"
+    "no-param-reassign": "off",
+    "no-underscore-dangle": "off"
   }
 }

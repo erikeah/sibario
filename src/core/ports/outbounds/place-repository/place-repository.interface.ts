@@ -7,5 +7,5 @@ export interface PlaceRepository {
     find(id: string): Promise<Place[]>;
     list(filter?: Partial<Place>): Promise<Place[]>;
     update(id: string, request: Place): Promise<Place>;
-    delete(id: string): Promise<Place>;
+    delete(id: string): Promise<void>;
 }

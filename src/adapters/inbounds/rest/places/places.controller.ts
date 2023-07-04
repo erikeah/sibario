@@ -1,5 +1,5 @@
 import {
-    Body, Controller, Get, Post,
+    Body, Controller, Get, Param, Post, Delete,
 } from '@nestjs/common';
 import { Place } from 'src/core/models';
 import { PlaceService } from 'src/core/services/place';
@@ -17,5 +17,11 @@ export class PlacesController {
     @Post()
     post(@Body() body: PostPlaceBodyDto): Promise<Place> {
         return this.placeService.create(body);
+    }
+
+    @Delete(':id')
+    async delete(@Param('id') id: string): Promise<object> {
+        await this.placeService.delete({ id });
+        return {};
     }
 }

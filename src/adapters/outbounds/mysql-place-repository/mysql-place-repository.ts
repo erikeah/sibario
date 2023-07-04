@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Place } from 'src/core/models';
 import { PlaceRepository } from 'src/core/ports/outbounds/place-repository';
@@ -50,6 +50,18 @@ export class MysqlPlaceRepository implements Partial<PlaceRepository> {
             );
         }
         return this.transform(place);
+    }
+
+    async delete(id: string): Promise<void> {
+        try {
+            await this.repository.delete(id);
+        } catch (error) {
+            new Logger().error(error);
+            throw new HandledError(
+                'an unknow error ocurred while deleting',
+                HandledErrorEnum.UnknowRepositoryError,
+            );
+        }
     }
 
     private transform(entity: PlaceEntity): Place {

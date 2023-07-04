@@ -1,5 +1,8 @@
 [Host]
-http://localhost:3000/places
+http://localhost:3000/places/${ID}
+
+[Method]
+DELETE
 
 [Headers]
 Content-Type: application/json

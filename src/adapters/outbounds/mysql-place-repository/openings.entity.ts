@@ -12,7 +12,7 @@ export class OpeningsEntity {
     @Column()
         day: string;
 
-    @ManyToOne('PlaceEntity', 'openings')
+    @ManyToOne('PlaceEntity', 'openings', { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
         place: PlaceEntity;
 
     @Column()

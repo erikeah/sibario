@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Place } from 'src/core/models';
-import { CreatePlace, GetPlaces } from 'src/core/ports/inbounds/place';
-import { CreatePlaceInboundPayload } from 'src/core/ports/inbounds/place/interfaces';
+import { CreatePlace, DeletePlace, GetPlaces } from 'src/core/ports/inbounds/place';
+import { CreatePlaceInboundPayload, DeletePlaceInboundPayload } from 'src/core/ports/inbounds/place/interfaces';
 import { PlaceRepository } from 'src/core/ports/outbounds/place-repository';
 import {
     HandledError,
@@ -9,7 +9,7 @@ import {
 } from 'src/shared/global-exception-filter';
 
 @Injectable()
-export class PlaceService implements GetPlaces, CreatePlace {
+export class PlaceService implements GetPlaces, CreatePlace, DeletePlace {
     constructor(
         @Inject(PlaceRepository) private placeRepository: PlaceRepository,
     ) {}
@@ -38,5 +38,15 @@ export class PlaceService implements GetPlaces, CreatePlace {
             places[i] = new Place(places[i]);
         }
         return places;
+    }
+
+    async delete(payload: DeletePlaceInboundPayload): Promise<void> {
+        if (!payload.id) {
+            throw new HandledError(
+                'missing argument, id is required',
+                HandledErrorEnum.BadRequest,
+            );
+        }
+        return this.placeRepository.delete(payload.id);
     }
 }

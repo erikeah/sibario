@@ -29,6 +29,22 @@ export class MysqlPlaceRepository implements Partial<PlaceRepository> {
         return places.map((place) => this.transform(place));
     }
 
+    async findOne(id: string): Promise<Place> {
+        const found = await this.repository.findOne(
+            {
+                where: { id },
+                relations: { openings: true },
+            },
+        );
+        if (!found) {
+            throw new HandledError(
+                'unable to find place',
+                HandledErrorEnum.NotFoundNotExist,
+            );
+        }
+        return this.transform(found);
+    }
+
     async create(payload: CreatePlaceOutboundPayload): Promise<Place> {
         const { id } = await this.entityManager.save(new PlaceEntity(payload));
         if (!id) {
@@ -62,7 +78,7 @@ export class MysqlPlaceRepository implements Partial<PlaceRepository> {
         if (!saved) {
             throw new HandledError(
                 'unable to find place to update, data has not changed',
-                HandledErrorEnum.UnknowRepositoryError,
+                HandledErrorEnum.NotFoundNotExist,
             );
         }
         const requestEntity = new PlaceEntity({ ...request, id: saved.id });

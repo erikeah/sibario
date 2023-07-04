@@ -24,20 +24,20 @@ describe('PlaceService', () => {
 
     describe('get', () => {
         it('should be defined', () => {
-            expect(service.get).toBeDefined();
+            expect(service.list).toBeDefined();
         });
         it('should return an array', async () => {
             jest.spyOn(placeRepository, 'list').mockResolvedValueOnce([
                 { id: '', name: '', maxSeats: 54 } as Place,
             ]);
-            const getResponse = await service.get();
+            const getResponse = await service.list();
             expect(Array.isArray(getResponse)).toBeTruthy();
         });
         it('should throw if place repository list did not response correctly', () => {
             jest.spyOn(placeRepository, 'list').mockResolvedValueOnce(
                 undefined,
             );
-            expect(() => service.get()).rejects.toThrowError(
+            expect(() => service.list()).rejects.toThrowError(
                 'place repository did not response',
             );
         });

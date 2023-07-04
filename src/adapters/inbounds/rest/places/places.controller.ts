@@ -11,7 +11,12 @@ export class PlacesController {
 
     @Get()
     get(): Promise<Place[]> {
-        return this.placeService.get();
+        return this.placeService.list();
+    }
+
+    @Get(':id')
+    getOne(@Param('id') id: string): Promise<Place> {
+        return this.placeService.findOne({ id });
     }
 
     @Post()

@@ -1,9 +1,14 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Place } from 'src/core/models';
 import {
-    CreatePlace, DeletePlace, GetPlaces, UpdatePlace,
+    CreatePlace, DeletePlace, FindOnePlace, ListPlaces, UpdatePlace,
 } from 'src/core/ports/inbounds/place';
-import { CreatePlaceInboundPayload, DeletePlaceInboundPayload, UpdatePlaceInboundPayload } from 'src/core/ports/inbounds/place/interfaces';
+import {
+    CreatePlaceInboundPayload,
+    DeletePlaceInboundPayload,
+    FindOnePlaceInboundPayload,
+    UpdatePlaceInboundPayload,
+} from 'src/core/ports/inbounds/place/interfaces';
 import { PlaceRepository } from 'src/core/ports/outbounds/place-repository';
 import {
     HandledError,
@@ -11,7 +16,12 @@ import {
 } from 'src/shared/global-exception-filter';
 
 @Injectable()
-export class PlaceService implements GetPlaces, CreatePlace, DeletePlace, UpdatePlace {
+export class PlaceService implements
+    ListPlaces,
+    FindOnePlace,
+    CreatePlace,
+    DeletePlace,
+    UpdatePlace {
     constructor(
         @Inject(PlaceRepository) private placeRepository: PlaceRepository,
     ) {}
@@ -28,7 +38,7 @@ export class PlaceService implements GetPlaces, CreatePlace, DeletePlace, Update
         return new Place(place);
     }
 
-    async get(): Promise<Place[]> {
+    async list(): Promise<Place[]> {
         const places = await this.placeRepository.list();
         if (!places || !Array.isArray(places)) {
             throw new HandledError(
@@ -40,6 +50,12 @@ export class PlaceService implements GetPlaces, CreatePlace, DeletePlace, Update
             places[i] = new Place(places[i]);
         }
         return places;
+    }
+
+    async findOne(payload: FindOnePlaceInboundPayload): Promise<Place> {
+        const place = await this.placeRepository.findOne(payload.id);
+        if (!place) throw new HandledError('place repository did not response', HandledErrorEnum.UnknowRepositoryError);
+        return place;
     }
 
     async update(payload: UpdatePlaceInboundPayload): Promise<Place> {

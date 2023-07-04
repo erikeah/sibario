@@ -35,6 +35,11 @@ export class GlobalExceptionFilter implements ExceptionFilter {
                     .status(HttpStatus.NOT_ACCEPTABLE)
                     .json(new RestError(HttpStatus.NOT_ACCEPTABLE, exception.message));
                 break;
+            case HandledErrorEnum.NotFoundNotExist:
+                response
+                    .status(HttpStatus.NOT_FOUND)
+                    .json(new RestError(HttpStatus.NOT_FOUND, exception.message));
+                break;
             default:
                 this.unhandled(exception, response);
         }

@@ -1,8 +1,17 @@
 import { Place } from 'src/core/models';
-import { CreatePlaceInboundPayload, DeletePlaceInboundPayload, UpdatePlaceInboundPayload } from './interfaces';
+import {
+    CreatePlaceInboundPayload,
+    DeletePlaceInboundPayload,
+    FindOnePlaceInboundPayload,
+    UpdatePlaceInboundPayload,
+} from './interfaces';
 
-export interface GetPlaces {
-    get(): Promise<Place[]>;
+export interface ListPlaces {
+    list(): Promise<Place[]>;
+}
+
+export interface FindOnePlace {
+    findOne(place: FindOnePlaceInboundPayload): Promise<Place>;
 }
 
 export interface CreatePlace {

@@ -24,9 +24,12 @@ export class OpeningDays {
     }
 
     private createOpeningHours(hours: OpeningHoursConstructor[]): OpeningHours[] {
-        for (let i = 0; i < hours.length; i++) {
-            hours[i] = new OpeningHours(hours[i]);
+        const result = [];
+        if (hours && hours.length > 0) {
+            for (let i = 0; i < hours.length; i++) {
+                result.push(new OpeningHours(hours[i]));
+            }
         }
-        return hours as OpeningHours[];
+        return result;
     }
 }

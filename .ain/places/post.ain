@@ -5,7 +5,19 @@ http://localhost:3000/places
 POST
 
 [Body]
-{ "name": "Bar San Timoteo" }
+{
+    "name": "Bar San Mateo",
+    "maxSeats": 45,
+    "openingDays": {
+        "monday": [],
+        "tuesday": [{"open": "10:00", "close": "15:00"}, {"open": "20:00", "close": "23:00" }],
+        "wednesday": [{"open": "10:00", "close": "15:00"}, {"open": "20:00", "close": "23:00" }],
+        "thursday": [{"open": "10:00", "close": "15:00"}, {"open": "20:00", "close": "23:00" }],
+        "friday": [{"open": "10:00", "close": "15:00"}, {"open": "20:00", "close": "23:00" }],
+        "saturday": [{"open": "10:00", "close": "15:00"}, {"open": "20:00", "close": "23:00" }],
+        "sunday": []
+    }
+}
 
 [Headers]
 Content-Type: application/json
@@ -14,4 +26,4 @@ Content-Type: application/json
 curl
 
 [BackendOptions]
--sS -D /dev/stderr
+-sS

@@ -3,7 +3,7 @@ import {
 } from '@nestjs/common';
 import { Place } from 'src/core/models';
 import { PlaceService } from 'src/core/services/place';
-import { PostPlaceBodyDto } from './dtos';
+import { PostPlaceBodyDto } from '../dtos';
 
 @Controller('places')
 export class PlacesController {

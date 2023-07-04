@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Place } from 'src/core/models';
 import { PlaceRepository } from 'src/core/ports/outbounds/place-repository';
-import { Repository } from 'typeorm';
+import { EntityManager, Repository } from 'typeorm';
 import {
     HandledError,
     HandledErrorEnum,
@@ -15,27 +15,63 @@ export class MysqlPlaceRepository implements Partial<PlaceRepository> {
     constructor(
         @InjectRepository(PlaceEntity)
         private repository: Repository<PlaceEntity>,
+        private entityManager: EntityManager,
     ) {}
 
     async list(): Promise<Place[]> {
-        const place = await this.repository.find();
-        if (!place) {
+        const places = await this.repository.find();
+        if (!places) {
             throw new HandledError(
                 'unable to list places',
                 HandledErrorEnum.UnknowRepositoryError,
             );
         }
-        return place;
+        return places.map((place) => this.transform(place));
     }
 
     async create(payload: CreatePlaceOutboundPayload): Promise<Place> {
-        const place = await this.repository.save(payload);
-        if (!place) {
+        const { id } = await this.entityManager.save(new PlaceEntity(payload));
+        if (!id) {
             throw new HandledError(
                 'unable to create new place',
                 HandledErrorEnum.UnknowRepositoryError,
             );
         }
-        return new Place(place);
+        const place = await this.repository.findOne(
+            {
+                where: { id },
+                relations: { openings: true },
+            },
+        );
+        if (!place) {
+            throw new HandledError(
+                'unable to find created place',
+                HandledErrorEnum.UnknowRepositoryError,
+            );
+        }
+        return this.transform(place);
+    }
+
+    private transform(entity: PlaceEntity): Place {
+        const { openings } = entity;
+        if (!openings || openings.length === 0) {
+            return new Place({ id: entity.id, name: entity.name });
+        }
+        const openingDays = {
+            monday: [],
+            tuesday: [],
+            wednesday: [],
+            thursday: [],
+            friday: [],
+            saturday: [],
+            sunday: [],
+        };
+        for (let i = 0; i < openings.length; i++) {
+            openingDays[openings[i].day].push({
+                open: openings[i].open,
+                close: openings[i].close,
+            });
+        }
+        return new Place({ id: entity.id, name: entity.name, openingDays });
     }
 }

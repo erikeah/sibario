@@ -1,5 +1,5 @@
 import { Place } from 'src/core/models';
-import { CreatePlaceInboundPayload, DeletePlaceInboundPayload } from './interfaces';
+import { CreatePlaceInboundPayload, DeletePlaceInboundPayload, UpdatePlaceInboundPayload } from './interfaces';
 
 export interface GetPlaces {
     get(): Promise<Place[]>;
@@ -7,6 +7,10 @@ export interface GetPlaces {
 
 export interface CreatePlace {
     create(place: CreatePlaceInboundPayload): Promise<Place>;
+}
+
+export interface UpdatePlace {
+    update(place: UpdatePlaceInboundPayload): Promise<Place>;
 }
 
 export interface DeletePlace {

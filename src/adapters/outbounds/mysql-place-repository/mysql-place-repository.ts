@@ -52,6 +52,42 @@ export class MysqlPlaceRepository implements Partial<PlaceRepository> {
         return this.transform(place);
     }
 
+    async update(id: string, request: Place): Promise<Place> {
+        const saved = await this.repository.findOne(
+            {
+                where: { id },
+                relations: { openings: true },
+            },
+        );
+        if (!saved) {
+            throw new HandledError(
+                'unable to find place to update, data has not changed',
+                HandledErrorEnum.UnknowRepositoryError,
+            );
+        }
+        const requestEntity = new PlaceEntity({ ...request, id: saved.id });
+        const { id: updatedId } = await this.entityManager.save(requestEntity);
+        if (!updatedId || updatedId !== saved.id) {
+            throw new HandledError(
+                'unable to update succesfully, maybe data corruption has occurred',
+                HandledErrorEnum.UnknowRepositoryError,
+            );
+        }
+        const updated = await this.repository.findOne(
+            {
+                where: { id: updatedId },
+                relations: { openings: true },
+            },
+        );
+        if (!updated) {
+            throw new HandledError(
+                'unable to find place after been updated',
+                HandledErrorEnum.UnknowRepositoryError,
+            );
+        }
+        return this.transform(updated);
+    }
+
     async delete(id: string): Promise<void> {
         try {
             await this.repository.delete(id);

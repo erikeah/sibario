@@ -1,0 +1,22 @@
+[Host]
+http://localhost:3000/places/2870fa0e-f4b4-41fd-aef8-eb4ebf5dceff
+
+[Method]
+PATCH
+
+[Body]
+{
+    "openingDays": {
+        "monday": [{"open": "10:00", "close": "15:00"}, {"open": "20:00", "close": "23:00" }],
+        "tuesday": []
+    }
+}
+
+[Headers]
+Content-Type: application/json
+
+[Backend]
+curl
+
+[BackendOptions]
+-sS

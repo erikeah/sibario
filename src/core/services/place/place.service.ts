@@ -1,7 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Place } from 'src/core/models';
-import { CreatePlace, DeletePlace, GetPlaces } from 'src/core/ports/inbounds/place';
-import { CreatePlaceInboundPayload, DeletePlaceInboundPayload } from 'src/core/ports/inbounds/place/interfaces';
+import {
+    CreatePlace, DeletePlace, GetPlaces, UpdatePlace,
+} from 'src/core/ports/inbounds/place';
+import { CreatePlaceInboundPayload, DeletePlaceInboundPayload, UpdatePlaceInboundPayload } from 'src/core/ports/inbounds/place/interfaces';
 import { PlaceRepository } from 'src/core/ports/outbounds/place-repository';
 import {
     HandledError,
@@ -9,7 +11,7 @@ import {
 } from 'src/shared/global-exception-filter';
 
 @Injectable()
-export class PlaceService implements GetPlaces, CreatePlace, DeletePlace {
+export class PlaceService implements GetPlaces, CreatePlace, DeletePlace, UpdatePlace {
     constructor(
         @Inject(PlaceRepository) private placeRepository: PlaceRepository,
     ) {}
@@ -38,6 +40,18 @@ export class PlaceService implements GetPlaces, CreatePlace, DeletePlace {
             places[i] = new Place(places[i]);
         }
         return places;
+    }
+
+    async update(payload: UpdatePlaceInboundPayload): Promise<Place> {
+        if (!payload.id) {
+            throw new HandledError(
+                'missing argument, id is required',
+                HandledErrorEnum.BadRequest,
+            );
+        }
+        const place = await this.placeRepository.update(payload.id, new Place(payload));
+        if (!place) throw new HandledError('place repository did not response', HandledErrorEnum.UnknowRepositoryError);
+        return new Place(place);
     }
 
     async delete(payload: DeletePlaceInboundPayload): Promise<void> {
